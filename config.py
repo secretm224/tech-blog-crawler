@@ -31,9 +31,12 @@ class Config:
     LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
     
     # User-Agent
-    USER_AGENT = os.getenv('USER_AGENT', 
+    USER_AGENT = os.getenv('USER_AGENT',
         'Mozilla/5.0 (compatible; TechBlogCrawler/1.0)')
-    
+
+    # Slack 알림 설정
+    SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', '')
+
     # 지원하는 블로그 목록
     SUPPORTED_BLOGS = {
         'woowahan': {
