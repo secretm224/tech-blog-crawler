@@ -58,6 +58,11 @@ class Config:
             'name': 'NAVER D2',
             'url': 'https://d2.naver.com/',
             'enabled': True
+        },
+        'yanolja': { 
+            'name': '야놀자 기술블로그',
+            'url': 'https://medium.com/yanoljacloud-tech',
+            'enabled': True
         }
     }
     

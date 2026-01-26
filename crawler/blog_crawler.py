@@ -6,6 +6,9 @@ from database import Database
 import json
 import sys
 import os
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 상위 폴더의 .env를 import하기 위해 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -45,7 +48,8 @@ class BlogCrawler:
             response = requests.post(
                 self.slack_webhook,
                 data=json.dumps(payload),
-                headers={'Content-Type': 'application/json'}
+                headers={'Content-Type': 'application/json'},
+                verify=False
             )
             if response.status_code == 200:
                 print("Slack 알림 전송 성공!")
