@@ -62,7 +62,7 @@ class BlogCrawler:
         articles = []
         
         try:
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=10, verify=False)
             response.encoding = 'utf-8'
             soup = BeautifulSoup(response.text, 'html.parser')
             post_items = soup.find_all('div', class_='post-item')
@@ -118,7 +118,7 @@ class BlogCrawler:
         articles = []
         
         try:
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=10, verify=False)
             response.encoding = 'utf-8'
             soup = BeautifulSoup(response.text, 'xml')
             items = soup.find_all('item')
@@ -175,7 +175,7 @@ class BlogCrawler:
         articles = []
         
         try:
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=10, verify=False)
             response.encoding = 'utf-8'
             soup = BeautifulSoup(response.text, 'xml')
             entries = soup.find_all('entry')
@@ -229,7 +229,7 @@ class BlogCrawler:
         articles = []
         
         try:
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=10, verify=False)
             response.encoding = 'utf-8'
             soup = BeautifulSoup(response.text, 'xml')
             items = soup.find_all('item')
@@ -274,6 +274,64 @@ class BlogCrawler:
         
         return articles, blog_name
     
+    def crawl_yanolja(self):
+        """야놀자 기술블로그 크롤링 (Medium RSS)"""
+        blog_id = 'yanolja'
+        blog_name = '야놀자 기술블로그'
+        url = 'https://medium.com/feed/yanoljacloud-tech'
+        articles = []
+        
+        try:
+            response = requests.get(url, headers=self.headers, timeout=10, verify=False)
+            response.encoding = 'utf-8'
+            soup = BeautifulSoup(response.text, 'xml')
+            items = soup.find_all('item')
+            
+            for item in items:
+                title = item.find('title').get_text(strip=True) if item.find('title') else ''
+                link = item.find('link').get_text(strip=True) if item.find('link') else ''
+                
+                if not title or not link:
+                    continue
+                
+                # 작성자 (Medium은 dc:creator 사용)
+                creator = item.find('dc:creator')
+                author = creator.get_text(strip=True) if creator else ''
+                
+                # 요약
+                description = item.find('description')
+                excerpt = ''
+                if description:
+                    desc_soup = BeautifulSoup(description.get_text(), 'html.parser')
+                    excerpt = desc_soup.get_text(strip=True)[:200]
+                
+                # 날짜 (Medium RSS 형식: Tue, 14 Jan 2025 00:00:00 GMT)
+                pub_date = item.find('pubDate')
+                published_at = None
+                if pub_date:
+                    try:
+                        date_str = pub_date.get_text(strip=True)
+                        published_at = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %Z')
+                    except:
+                        pass
+                
+                articles.append({
+                    'blog_id': blog_id,
+                    'title': title,
+                    'url': link,
+                    'author': author,
+                    'excerpt': excerpt,
+                    'published_at': published_at
+                })
+            
+            print(f"[{blog_name}] {len(articles)}개 글 발견")
+            
+        except Exception as e:
+            print(f"[{blog_name}] 크롤링 에러: {e}")
+        
+        return articles, blog_name
+
+
     def run_all(self):
         """모든 블로그 크롤링 실행"""
         print("=" * 50)
@@ -290,6 +348,7 @@ class BlogCrawler:
             self.crawl_kakao,
             self.crawl_naver,
             self.crawl_oliveyoung,
+            self.crawl_yanolja,
         ]
         
         for crawl_func in crawlers:
