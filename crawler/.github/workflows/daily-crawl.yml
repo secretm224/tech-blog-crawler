@@ -2,10 +2,7 @@ name: Daily Tech Blog Crawler
 
 on:
   schedule:
-    # 매일 한국시간 오전 9시 (UTC 0시)
     - cron: '0 0 * * *'
-  
-  # 수동 실행
   workflow_dispatch:
 
 jobs:
@@ -36,9 +33,3 @@ jobs:
       run: |
         cd crawler
         python blog_crawler.py
-    
-    - name: 완료 알림
-      if: always()
-      run: |
-        echo "크롤링 작업 완료!"
-        echo "Status: ${{ job.status }}"
