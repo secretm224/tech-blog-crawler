@@ -2,7 +2,7 @@ name: Daily Tech Blog Crawler
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # UTC 09:00 = 한국시간 18:00
+    - cron: '*/5 * * * *'  # 테스트: 5분마다 실행
   workflow_dispatch:
   push:
     branches: [ main ]
