@@ -2,10 +2,8 @@ name: Daily Tech Blog Crawler
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # 매일 한국시간 18:00 (GitHub 스케줄이 작동하는 경우)
+    - cron: '0 9 * * *'  # 매일 UTC 09:00 = 한국시간 18:00
   workflow_dispatch:
-  repository_dispatch:
-    types: [trigger-crawl]  # 외부에서 트리거 가능
 
 permissions:
   contents: read
