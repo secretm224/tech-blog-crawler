@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '0 9 * * *'  # UTC 09:00 = 한국시간 18:00
   workflow_dispatch:
+  push:
+    branches: [ main ]
 
 permissions:
   contents: read
