@@ -2,8 +2,11 @@ name: Daily Tech Blog Crawler
 
 on:
   schedule:
-    - cron: '0 9 * * *'
+    - cron: '0 9 * * *'  # UTC 09:00 = 한국시간 18:00
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   crawl:
